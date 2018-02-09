@@ -2,46 +2,11 @@
 var AndreyCoinCrowdsale = artifacts.require("AndreyCoinCrowdsale");
 
 contract('AndreyCoinCrowdsale', function(accounts) {
-  it("should put 3 AndreyCoin in the first account", function() {
+  it("1should put 2 AndreyCoin in the first account", function() {
     return AndreyCoinCrowdsale.deployed().then(function(instance) {
-      return instance.token.balanceOf(accounts[0]);
+      return instance.token.balanceOf(accounts[1]);
     }).then(function(balance) {
-      assert.equal(balance.valueOf(), 3, "3 wasn't in the first account");
-    });
-  });
-  it("should send coin correctly", function() {
-    var meta;
-
-    // Get initial balances of first and second account.
-    var account_one = accounts[0];
-    var account_two = accounts[1];
-
-    var account_one_starting_balance;
-    var account_two_starting_balance;
-    var account_one_ending_balance;
-    var account_two_ending_balance;
-
-    var amount = 1;
-
-    return AndreyCoinCrowdsale.deployed().then(function(instance) {
-      acoin = instance;
-      return acoin.getBalance.call(account_one);
-    }).then(function(balance) {
-      account_one_starting_balance = balance.toNumber();
-      return acoin.getBalance.call(account_two);
-    }).then(function(balance) {
-      account_two_starting_balance = balance.toNumber();
-      return acoin.sendCoin(account_two, amount, {from: account_one});
-    }).then(function() {
-      return acoin.getBalance.call(account_one);
-    }).then(function(balance) {
-      account_one_ending_balance = balance.toNumber();
-      return acoin.getBalance.call(account_two);
-    }).then(function(balance) {
-      account_two_ending_balance = balance.toNumber();
-
-      assert.equal(account_one_ending_balance, account_one_starting_balance - amount, "Amount wasn't correctly taken from the sender");
-      assert.equal(account_two_ending_balance, account_two_starting_balance + amount, "Amount wasn't correctly sent to the receiver");
+      assert.equal(balance.valueOf(), 2, "2 wasn't in the first account");
     });
   });
 });
