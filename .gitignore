@@ -18,3 +18,5 @@ dist
 
 contracts/.placeholder
 test/.placeholder
+
+old_files/*
