@@ -1,10 +1,13 @@
 pragma solidity ^0.4.18;
 
+import "./SafeMath.sol";
+
 //based on https://github.com/OpenZeppelin/zeppelin-solidity/tree/master/contracts/token/ERC20
 //TODO:
 //Add SafeMath
 
 contract AndreyCoin {
+    using SafeMath for uint256;
 
     mapping(address => uint256) balances;
     uint256 totalSupply_;
@@ -39,8 +42,10 @@ contract AndreyCoin {
      * @return A boolean that indicates whether the operation is successful
      */
     function mint(address _to, uint256 _amount) onlyOwner public returns (bool) {
-        totalSupply_ = totalSupply_ + _amount;
-        balances[_to] = balances[_to] + _amount;
+        //totalSupply_ = totalSupply_ + _amount;
+        //balances[_to] = balances[_to] + _amount;
+        totalSupply_ = totalSupply_.add(_amount);
+        balances[_to] = balances[_to].add(_amount);
         Mint(_to,_amount);
         return true;
     }

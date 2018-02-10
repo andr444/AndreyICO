@@ -3,6 +3,7 @@ pragma solidity ^0.4.18;
 import "./AndreyCoin.sol";
 
 contract AndreyCoinCrowdsale {
+    using SafeMath for uint256;
 
     // The token being sold
     AndreyCoin public token;
@@ -25,22 +26,28 @@ contract AndreyCoinCrowdsale {
      */
     event TokenPurchase(address indexed purchaser, uint256 value, uint256 amount);
 
+    /**
+    * AndreyCoinCrowdsale constructor
+    * @param _wallet the wallet to which the raised funds will be transferred
+     */
     function AndreyCoinCrowdsale(address _wallet) public {
         require(_wallet != address (0));
         
         token = createTokenContract();
+        //currently the rate is fixed (1 wei gives 1 AndreyCoin), may be changed in the future
         rate = 1;
         wallet = _wallet;
-    }
-
-    // fallback function can be used to buy tokens
-    function () external payable {
-        buyTokens();
     }
 
     // creates the token to be sold
     function createTokenContract() internal returns (AndreyCoin) {
         return new AndreyCoin();
+    }
+
+    // fallback function can be used to buy tokens
+    // Doesn't work?
+    function () external payable {
+        buyTokens();
     }
 
     function buyTokens() public payable {
@@ -51,12 +58,12 @@ contract AndreyCoinCrowdsale {
         
         uint256 weiAmount = msg.value;
         //calculate token amount to be created 
-        uint256 tokens = weiAmount;
+        uint256 newTokens = weiAmount;
 
         //make this safe later by using SafeMath
-        weiRaised = weiRaised + weiAmount;
-        token.mint(msg.sender,tokens);
-        TokenPurchase(msg.sender,weiAmount,tokens);
+        weiRaised = weiRaised.add(weiAmount);
+        token.mint(msg.sender,newTokens);
+        TokenPurchase(msg.sender,weiAmount,newTokens);
         forwardFunds();
     }
 
@@ -67,5 +74,9 @@ contract AndreyCoinCrowdsale {
 
     function totalWeiRaised() public view returns (uint256) {
         return weiRaised;
+    }
+
+    function balanceOf(address participant) public view returns (uint256) {
+        return token.balanceOf(participant);
     }
 }
