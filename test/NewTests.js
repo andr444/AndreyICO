@@ -7,7 +7,7 @@ contract('AndreyCoin', function(accounts) {
     console.log("AndreyCoin tests started")
     let andreyCoin
     beforeEach(async function () {
-        // Create Gnosis Safe
+        // Create AndreyCoin
         andreyCoin = await AndreyCoin.new()
     })
 
@@ -37,7 +37,7 @@ contract('AndreyCoinCrowdsale', function(accounts) {
     // Wallet to receive funds (= accounts[2] on Ganache)
     let walletToReceiveFunds = "0xC5fdf4076b8F3A5357c5E395ab970B5B54098Fef"
     beforeEach(async function () {
-        // Create Gnosis Safe
+        // Create AndreyCoinCrowdsale
         andreyCoinCrowdsale = await AndreyCoinCrowdsale.new(walletToReceiveFunds)
     })
 
