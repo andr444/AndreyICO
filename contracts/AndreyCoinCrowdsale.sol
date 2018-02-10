@@ -64,4 +64,8 @@ contract AndreyCoinCrowdsale {
     function forwardFunds() internal {
         wallet.transfer(msg.value);
     }
+
+    function totalWeiRaised() public view returns (uint256) {
+        return weiRaised;
+    }
 }
