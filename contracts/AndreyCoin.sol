@@ -3,8 +3,6 @@ pragma solidity ^0.4.18;
 import "./SafeMath.sol";
 
 //based on https://github.com/OpenZeppelin/zeppelin-solidity/tree/master/contracts/token/ERC20
-//TODO:
-//Add SafeMath
 
 contract AndreyCoin {
     using SafeMath for uint256;
@@ -13,19 +11,13 @@ contract AndreyCoin {
     uint256 totalSupply_;
     address public owner;
 
-    string public constant name = "Andrey Crowdsale Token";
-    string public constant symbol = "AND";
-    uint8 public constant decimals = 18;
+    string public constant NAME = "Andrey Crowdsale Token";
+    string public constant SYMBOL = "AND";
+    uint8 public constant DECIMALS = 18;
 
     event Mint(address indexed to, uint256 amount);
-
-    /**
-    * @dev Set the original `owner` of the contract to the sender
-    * account.
-    */
-    function AndreyCoin() public {
-        owner = msg.sender;
-    }
+    event ChangedContractOwner(address newOwner);
+    event Transfer(address indexed from, address indexed to, uint256 value);
 
     /**
     * @dev Throws if called by any account other than the owner.
@@ -36,17 +28,48 @@ contract AndreyCoin {
     }
 
     /**
+    * @dev Set the original `owner` of the contract to the sender account.
+    */
+    function AndreyCoin() public {
+        owner = msg.sender;
+    }
+
+    /**
+    * @dev Set a new `owner` of the contract - this is used to enable minting by the ICO contract
+    * @param _newOwner the new owner (should be the ICO contract address)
+    */
+    function changeContractOwner(address _newOwner) onlyOwner public {
+        require(_newOwner != address(0));
+        owner = _newOwner;
+        ChangedContractOwner(owner);
+    }
+
+    /**
      * @dev Function to mint tokens
      * @param _to The address that will receive the minted tokens
      * @param _amount The amount of tokens to mint
      * @return A boolean that indicates whether the operation is successful
      */
     function mint(address _to, uint256 _amount) onlyOwner public returns (bool) {
-        //totalSupply_ = totalSupply_ + _amount;
-        //balances[_to] = balances[_to] + _amount;
         totalSupply_ = totalSupply_.add(_amount);
         balances[_to] = balances[_to].add(_amount);
         Mint(_to,_amount);
+        return true;
+    }
+
+    /**
+    * @dev transfer token for a specified address
+    * @param _to The address to transfer to.
+    * @param _value The amount to be transferred.
+    */
+    function transfer(address _to, uint256 _value) public returns (bool) {
+        require(_to != address(0));
+        require(_value <= balances[msg.sender]);
+
+        // SafeMath.sub will throw if there is not enough balance.
+        balances[msg.sender] = balances[msg.sender].sub(_value);
+        balances[_to] = balances[_to].add(_value);
+        Transfer(msg.sender, _to, _value);
         return true;
     }
 

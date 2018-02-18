@@ -14,9 +14,7 @@ module.exports = function(deployer, network, accounts) {
   //according to 
   // https://github.com/trufflesuite/truffle/issues/650#issuecomment-342751957
   // http://truffleframework.com/docs/getting_started/migrations
-  deployer.deploy(AndreyCoin).then ( function() {
-    return deployer.deploy(AndreyCoinCrowdsale,wallet,AndreyCoin.address);
-  });
+  deployer.deploy(AndreyCoin)
   //console.log(AndreyCoin.address)
   //console.log(AndreyCoinCrowdsale.address)
 };
